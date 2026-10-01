@@ -475,7 +475,7 @@ const waUrl = `https://wa.me/${telefono.replace('+', '')}?text=${encodeURICompon
 
 **No hay idempotencia.** Un doble click genera dos links. El segundo reemplaza al primero en la base, así que no corrompe datos, pero deja un link inútil circulando. **Deshabilitar el botón mientras la petición está en vuelo.**
 
-**Cada generación envía un correo** a `legal@ultimmarketing.com` con copia a `johan@ultimmarketing.com`. Si se hacen pruebas contra producción, van a llegar correos reales.
+**Cada generación envía un correo** a `legal@ultimmarketing.com` con copia a `daniela@ultimmarketing.com`. Si se hacen pruebas contra producción, van a llegar correos reales.
 
 **Un link generado sigue vivo hasta vencerse.** Si el asesor genera uno nuevo antes de que el anterior venza, el cliente podría pagar el viejo. La base guarda el historial, pero conviene que la UI advierta al asesor cuando el link anterior **aún no ha vencido** (comparar `expiresAt` con hoy).
 

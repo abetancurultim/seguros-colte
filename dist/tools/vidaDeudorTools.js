@@ -193,7 +193,7 @@ Coltefinanciera en alianza con Link Agencia de Seguros`,
         },
         {
             to: "legal@ultimmarketing.com",
-            cc: ["johan@ultimmarketing.com"],
+            cc: ["daniela@ultimmarketing.com"],
             from: {
                 email: "notificaciones@asistenciacoltefinanciera.com",
                 name: "Sistema Coltefinanciera"
@@ -253,7 +253,7 @@ Sistema Coltefinanciera`,
                 clientSent = true;
                 clientMessageId = messageId;
             }
-            else if (email === "legal@ultimmarketing.com" || email === "johan@ultimmarketing.com") {
+            else if (email === "legal@ultimmarketing.com" || email === "daniela@ultimmarketing.com") {
                 adminSent = true;
                 adminMessageId = messageId;
             }
