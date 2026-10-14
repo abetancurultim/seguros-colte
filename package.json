@@ -13,7 +13,8 @@
     "test:bienestar": "tsx src/test/run-bienestar-test.ts",
     "test:bienestar:quick": "tsx src/test/quick-bienestar-test.ts",
     "test:client": "tsx src/test/test-client-identification.ts",
-    "test:payment": "tsx src/test/test-payment-tools.ts"
+    "test:payment": "tsx src/test/test-payment-tools.ts",
+    "test:payment:offline": "tsx src/test/test-bienestar-payment.ts"
   },
   "keywords": [],
   "author": "",

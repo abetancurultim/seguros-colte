@@ -45,9 +45,9 @@ Pobla el selector de productos. Sin parámetros. Los montos viven en el backend:
     },
     {
       "key": "bienestar",
-      "label": "Seguro Bienestar Plus",
+      "label": "Bienestar Plus Protegido",
       "serviceType": "bienestar_plus",
-      "monthlyAmount": 10000,
+      "monthlyAmount": 15589,
       "defaultInstallments": 12,
       "perUnit": false,
       "unitLabel": null,

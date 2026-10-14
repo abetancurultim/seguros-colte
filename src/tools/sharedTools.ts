@@ -3,6 +3,7 @@ import { z } from "zod";
 import { sendPaymentLinkEmail} from "../functions/sharedFunctions.js";
 import { generatePaymentLinkFlow } from "../services/paymentsWayService.js";
 import { PaymentFlowRequest } from "../types/paymentsWay.js";
+import { PRODUCTS, resolveProductKey } from "../config/products.js";
 
 /**
  * Herramienta para enviar enlaces de pago por correo electrónico
@@ -10,14 +11,20 @@ import { PaymentFlowRequest } from "../types/paymentsWay.js";
  */
 export const sendPaymentLinkEmailTool = tool(
   async ({ clientName, clientEmail, insuranceName, clientNumber, id, document_id, amount }: { clientName: string; clientEmail: string; insuranceName: string; clientNumber: string; id: number; document_id: string; amount: number }) => {
+    const bienestar = resolveProductKey(insuranceName.trim().replace(/^seguro\s+/i, '')) === 'bienestar'
+      ? PRODUCTS.bienestar
+      : null;
+    const productName = bienestar?.label ?? insuranceName;
+    const monthlyAmount = bienestar?.monthlyAmount ?? amount;
+
     console.log(`📧 ENVIANDO EMAIL DE PAGO:`);
     console.log(`   Cliente: ${clientName}`);
     console.log(`   Email: ${clientEmail}`);
-    console.log(`   Seguro: ${insuranceName}`);
+    console.log(`   Seguro: ${productName}`);
     console.log(`   Teléfono: ${clientNumber}`);
     console.log(`   ID: ${id}`);
     console.log(`   Documento de identificación: ${document_id}`);
-    console.log(`   Monto mensual: $${amount} COP`);
+    console.log(`   Monto mensual: $${monthlyAmount} COP`);
     
     // const result = await sendPaymentLinkEmail(clientName, clientEmail, insuranceName, clientNumber);
     
@@ -28,15 +35,16 @@ export const sendPaymentLinkEmailTool = tool(
       identification: document_id,
       email: clientEmail,
       phone: clientNumber.replace('+57', '').replace('+', ''),
-      amount: amount, // Monto dinámico pasado por la IA
-      description: `Seguro ${insuranceName}`,
+      amount: monthlyAmount,
+      description: bienestar?.label ?? `Seguro ${insuranceName}`,
       clientId: id,
-      totalInstallments: 12
+      totalInstallments: 12,
+      serviceType: bienestar?.serviceType
     };
     console.log('💳 Generando enlace de pago con los siguientes datos:', paymentData);
     
     const paymentLink = await generatePaymentLinkFlow(paymentData);
-    const result = `✅ Enlace de pago generado y enviado exitosamente a ${clientEmail}. El cliente ${clientName} recibirá instrucciones para completar la compra de ${insuranceName}. Link: ${paymentLink}`;
+    const result = `✅ Enlace de pago generado y enviado exitosamente a ${clientEmail}. El cliente ${clientName} recibirá instrucciones para completar la compra de ${productName}. Link: ${paymentLink}`;
     
     return result;
   },
@@ -46,11 +54,11 @@ export const sendPaymentLinkEmailTool = tool(
     schema: z.object({
       clientName: z.string().describe("El nombre completo del cliente (usar datos del cliente identificado si están disponibles)"),
       clientEmail: z.string().describe("El correo electrónico del cliente (usar datos del cliente identificado si están disponibles)"),
-      insuranceName: z.string().describe("El nombre del seguro que el cliente está adquiriendo (ej: 'Bienestar Plus')"),
+      insuranceName: z.string().describe("El nombre del seguro que el cliente está adquiriendo (ej: 'Bienestar Plus Protegido')"),
       clientNumber: z.string().describe("El número de teléfono del cliente (formato internacional, ej: +573001234567). Necesario para registrar el envío en el historial."),
       id: z.number().describe("id que identifica la fila en la cual se encuntra el cliente en la tabla dentix_clients."),
       document_id: z.string().describe("El documento de identificación del cliente. cedula din numero de identificacion ciudadana"),
-      amount: z.number().describe("El monto mensual del seguro en pesos colombianos (ej: 10000 para Bienestar Plus $10,000 COP)"),
+      amount: z.number().describe("El monto mensual del seguro en pesos colombianos (15589 para Bienestar Plus Protegido, $15.589 COP)"),
     }),
   }
 );

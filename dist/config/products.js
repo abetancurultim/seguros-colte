@@ -19,9 +19,9 @@ export const PRODUCTS = {
         maxUnits: 5
     },
     bienestar: {
-        label: 'Seguro Bienestar Plus',
+        label: 'Bienestar Plus Protegido',
         serviceType: 'bienestar_plus',
-        monthlyAmount: 10000,
+        monthlyAmount: 15589,
         defaultInstallments: 12,
         perUnit: false
     }
@@ -32,6 +32,7 @@ const PRODUCT_ALIASES = {
     mascota: 'mascotas',
     bienestar: 'bienestar',
     'bienestar plus': 'bienestar',
+    'bienestar plus protegido': 'bienestar',
     bienestarplus: 'bienestar',
     'bienestar-plus': 'bienestar',
     bienestar_plus: 'bienestar'

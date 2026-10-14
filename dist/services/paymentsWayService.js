@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { supabase } from '../config/supabase.js';
 import { notifySupervisorPaymentLink } from '../functions/sharedFunctions.js';
+import { PRODUCTS, resolveProductKey } from '../config/products.js';
 const PAYMENTS_WAY_CONFIG = {
     API_URL: process.env.PAYMENTS_WAY_API_URL || 'https://serviceregister.paymentsway.co/ClientAPI',
     TOKEN: process.env.PAYMENTS_WAY_TOKEN || '',
@@ -103,6 +104,17 @@ export const listarSuscripcionesPendientes = async (identificationDoc, serviceTy
  */
 export const generatePaymentLinkFlow = async (data) => {
     try {
+        // También corrige llamadas antiguas de la IA/API que omiten serviceType.
+        const productName = data.description.split(' - ')[0].trim().replace(/^seguro\s+/i, '');
+        if (data.serviceType === 'bienestar' || data.serviceType === PRODUCTS.bienestar.serviceType
+            || resolveProductKey(productName) === 'bienestar') {
+            data = {
+                ...data,
+                amount: PRODUCTS.bienestar.monthlyAmount,
+                description: PRODUCTS.bienestar.label,
+                serviceType: PRODUCTS.bienestar.serviceType
+            };
+        }
         // 1. Crear Persona
         const personData = {
             firstname: data.firstname,
